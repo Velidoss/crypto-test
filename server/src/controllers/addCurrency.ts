@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import { v2 as cloudinary } from 'cloudinary';
 import { Currency } from '../models/Currency';
 
-export const editCurrencyValueController = async (req: Request, res: Response) => {
+export const addCurrency = async (req: Request, res: Response) => {
   try {
     const { file, body } = req;
 
@@ -27,7 +27,6 @@ export const editCurrencyValueController = async (req: Request, res: Response) =
 
     return res.status(201).json({ message: 'Item created successfully', newItem });
   } catch (error) {
-    console.error('Error:', error);
     return res.status(500).json({ message: 'Internal server error', error });
   }
 };

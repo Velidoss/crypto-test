@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { Currency } from '../models/Currency';
 
-export const addCurrencyValueController = async (req: Request, res: Response) => {
+export const addCurrencyValue = async (req: Request, res: Response) => {
   try {
     const { amount } = req.body;
     const { id } = req.params;
@@ -23,12 +23,6 @@ export const addCurrencyValueController = async (req: Request, res: Response) =>
     const formattedDate = `${currentDate.getDate()}/${
       currentDate.getMonth() + 1
     }/${currentDate.getFullYear()}: ${currentDate.getSeconds()}/${currentDate.getMinutes()}/${currentDate.getHours()}`;
-    console.log(
-      '🚀 ~ file: addCurrencyValueController.ts:16 ~ addCurrencyValueController ~ currency:',
-      currency,
-      'values',
-      currency.values,
-    );
 
     currency.values.push({
       amount,
@@ -38,7 +32,6 @@ export const addCurrencyValueController = async (req: Request, res: Response) =>
 
     return res.status(200).json({ message: 'Item updated successfully', currency });
   } catch (error) {
-    console.error('Error:', error);
     return res.status(500).json({ message: 'Internal server error', error });
   }
 };
