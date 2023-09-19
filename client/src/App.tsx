@@ -1,4 +1,5 @@
 import { CustomButton } from './components/CustomButton';
+import { Header } from './components/Header/Header';
 import { Layout } from './components/Layout';
 import { ModalForm } from './components/ModalForm/ModalForm';
 import { useAppDispatch } from './store/hooks';

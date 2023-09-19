@@ -32,7 +32,6 @@ export const ModalForm: React.FC = () => {
 
   const handleFormSubmit = async (values: { name: string; image: File }) => {
     // Handle form submission, e.g., dispatch an action to save the data
-    console.log('Form data:', values);
     const formData = new FormData();
     formData.append('name', values.name);
     formData.append('image', values.image);
