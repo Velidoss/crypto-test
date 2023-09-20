@@ -3,6 +3,7 @@ import React, { ReactNode, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import * as Yup from 'yup';
 
+import { useAddCurrencyMutation } from '../../store/api/currencyApi';
 import { isMOdalOpenSeelctor, toggleModalOpen } from '../../store/modal/slice';
 
 // Define validation schema using Yup
@@ -30,44 +31,15 @@ export const ModalForm: React.FC = () => {
     dispatch(toggleModalOpen());
   };
 
+  const [addCurrency] = useAddCurrencyMutation();
+
   const handleFormSubmit = async (values: { name: string; image: File }) => {
-    // Handle form submission, e.g., dispatch an action to save the data
     const formData = new FormData();
     formData.append('name', values.name);
     formData.append('image', values.image);
 
-    try {
-      const response = await fetch('http://localhost:8080/api/add-currency', {
-        method: 'POST',
-        body: formData,
-        headers: {
-          'Access-Control-Allow-Origin': '*',
-        },
-        // body: JSON.stringify({
-        //   name: values.name,
-        //   image: formData.image
-        // }),
-      });
+    addCurrency(formData);
 
-      if (response.ok) {
-        const data: ApiResponse = await response.json();
-        console.log('API Response:', data);
-        // setApiResponse(data);
-
-        // Handle any further logic here, such as resetting the form or displaying a success message.
-      } else {
-        console.error('API Error:', response.statusText);
-
-        // Handle error, e.g., display an error message to the user.
-      }
-      // Handle any further logic here, such as resetting the form or displaying a success message.
-    } catch (error) {
-      console.error('API Error:', error);
-
-      // Handle error, e.g., display an error message to the user.
-    }
-
-    // Close the modal
     handleClose();
   };
 
@@ -107,21 +79,6 @@ export const ModalForm: React.FC = () => {
                 <label htmlFor="image" className="block font-semibold mb-2">
                   Image:
                 </label>
-                {/* <Field
-                  type="file"
-                  id="image"
-                  name="image"
-                  accept="image/png, .svg"
-                  value={values.image}
-                  className={`border w-full py-2 px-3 ${
-                    errors.image && touched.image ? 'border-red-500' : ''
-                  }`}
-                  onChange={(event: { currentTarget: { files: any[]; }; }) => {
-                    if (event.currentTarget.files) {
-                      setFieldValue("image", event.currentTarget.files[0]);
-                    }
-                  }}
-                /> */}
                 <input
                   type="file"
                   id="image"
@@ -133,7 +90,6 @@ export const ModalForm: React.FC = () => {
                     errors.image && touched.image ? 'border-red-500' : ''
                   }`}
                   onChange={(e) => {
-                    // Object is possibly null error w/o check
                     if (e.currentTarget.files) {
                       setFieldValue('image', e.currentTarget.files[0]);
                     }

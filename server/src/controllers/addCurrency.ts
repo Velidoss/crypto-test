@@ -25,7 +25,7 @@ export const addCurrency = async (req: Request, res: Response) => {
     });
     await newItem.save();
 
-    return res.status(201).json({ message: 'Item created successfully', newItem });
+    return res.status(201).json({ newCurrency: newItem });
   } catch (error) {
     return res.status(500).json({ message: 'Internal server error', error });
   }

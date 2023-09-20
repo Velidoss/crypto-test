@@ -1,4 +1,10 @@
 import React, { useState } from 'react';
+import Select from 'react-select';
+
+import PlusIcon from '../../../resources/plus-svgrepo-com.svg';
+import { Currency } from '../../store/api/currencyApi';
+import { useAppDispatch } from '../../store/hooks';
+import { toggleModalOpen } from '../../store/modal/slice';
 
 // Sample currency data (replace with your actual data)
 const currencyList = [
@@ -7,21 +13,49 @@ const currencyList = [
   { name: 'Ripple', icon: 'XRP' },
 ];
 
-export const Header: React.FC = () => {
-  // State to store the selected currency
-  const [selectedCurrency, setSelectedCurrency] = useState<string>('BTC');
+type Props = {
+  currencies: Currency[];
+  setSelectedCurrency: (value: string) => void;
+};
 
-  // State to store the amount in USDT for the selected currency (replace with actual amount)
+export const Header: React.FC<Props> = ({ currencies, setSelectedCurrency }) => {
   const [usdtAmount, setUsdtAmount] = useState<number>(10000);
+  const dispatch = useAppDispatch();
 
-  // Function to handle currency selection
-  const handleCurrencyChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    const selectedValue = event.target.value;
-    setSelectedCurrency(selectedValue);
-    // Fetch the amount in USDT for the selected currency (you can replace this with your logic)
-    // For now, just set a placeholder amount
-    setUsdtAmount(5000);
+  const toggleModal = () => {
+    dispatch(toggleModalOpen());
   };
+
+  const handleCurrencyChange = (
+    currency: { value: string; label: JSX.Element } | null,
+  ): void => {
+    if (currency?.value === 'add_currency') {
+      toggleModal();
+    } else {
+      setSelectedCurrency(currency?.value || '');
+    }
+  };
+
+  const options = [
+    {
+      value: 'add_currency',
+      label: (
+        <div className="flex items-center text-black">
+          <img src={PlusIcon} alt="add" className="w-8 h-8 mr-2" />
+          Add currency
+        </div>
+      ),
+    },
+    ...currencies.map((currency) => ({
+      value: currency._id,
+      label: (
+        <div className="flex items-center text-black">
+          <img src={currency.imageUrl} alt={currency.name} className="w-8 h-8 mr-2" />
+          {currency.name}
+        </div>
+      ),
+    })),
+  ];
 
   return (
     <header className="w-full flex shrink-1 bg-gradient-to-r from-yellow-300 via-red-500 to-pink-400 p-4">
@@ -31,27 +65,18 @@ export const Header: React.FC = () => {
           <label htmlFor="currency" className="text-white font-semibold">
             Select Currency:
           </label>
-          <select
-            id="currency"
-            name="currency"
-            className="px-2 py-1 border border-white rounded-md bg-transparent text-white focus:outline-none"
-            value={selectedCurrency}
+          <Select
+            defaultValue={options[1]}
             onChange={handleCurrencyChange}
-          >
-            {currencyList.map((currency) => (
-              <option key={currency.icon} value={currency.icon}>
-                {currency.name}
-              </option>
-            ))}
-          </select>
+            className="px-2 w-48 min-w-72 py-1 border border-white rounded-md bg-transparent text-white focus:outline-none"
+            options={options}
+          />
         </div>
 
-        {/* Middle Part */}
         <div className="text-white font-semibold">
           USDT Amount: <span className="text-yellow-300">{usdtAmount}</span>
         </div>
 
-        {/* Right Part */}
         <button className="bg-white text-red-500 px-4 py-2 rounded-md hover:bg-red-500 hover:text-white focus:outline-none">
           Add Values
         </button>
