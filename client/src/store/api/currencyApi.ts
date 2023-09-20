@@ -1,5 +1,7 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
+import { setCurrencyId } from '../modal/slice';
+
 export type CurrencyValue = { amount: string; time: string }[];
 
 export type Currency = {
@@ -19,17 +21,26 @@ export const currencyApi = createApi({
     getCurrencies: builder.query<Currency[], void>({
       query: () => ({ url: `/get-currencies`, method: 'get' }),
       providesTags: ['Currencies'],
+      async onQueryStarted(args, { queryFulfilled, dispatch }) {
+        const result = await queryFulfilled;
+
+        dispatch(setCurrencyId(result.data[1]._id));
+      },
     }),
     addCurrency: builder.mutation<Currency, FormData>({
       query: (formData) => ({ url: `/add-currency`, method: 'post', body: formData }),
       invalidatesTags: ['Currencies'],
     }),
-    addCurrencyValue: builder.mutation<Currency, { id: string; amount: number }>({
-      query: ({ id, amount }) => ({
+    addCurrencyValue: builder.mutation<
+      Currency,
+      { id: string; amount: number; time: string }
+    >({
+      query: ({ id, amount, time }) => ({
         url: `/add-currency-value/${id}`,
         method: 'put',
         body: {
           amount: amount.toString(),
+          time,
         },
       }),
       invalidatesTags: ['Currencies'],

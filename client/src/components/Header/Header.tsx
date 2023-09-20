@@ -4,7 +4,7 @@ import Select from 'react-select';
 import PlusIcon from '../../../resources/plus-svgrepo-com.svg';
 import { Currency } from '../../store/api/currencyApi';
 import { useAppDispatch } from '../../store/hooks';
-import { toggleModalOpen } from '../../store/modal/slice';
+import { closeModal, setCurrencyId, toggleModalOpen } from '../../store/modal/slice';
 
 // Sample currency data (replace with your actual data)
 const currencyList = [
@@ -15,23 +15,34 @@ const currencyList = [
 
 type Props = {
   currencies: Currency[];
+  selectedCurrency?: Currency;
   setSelectedCurrency: (value: string) => void;
 };
 
-export const Header: React.FC<Props> = ({ currencies, setSelectedCurrency }) => {
+export const Header: React.FC<Props> = ({
+  currencies,
+  selectedCurrency,
+  setSelectedCurrency,
+}) => {
   const [usdtAmount, setUsdtAmount] = useState<number>(10000);
+  const [modalOpen, setModalOpen] = useState<number>(10000);
   const dispatch = useAppDispatch();
 
-  const toggleModal = () => {
-    dispatch(toggleModalOpen());
+  const toggleCurrencyModal = () => {
+    dispatch(toggleModalOpen('currency'));
+  };
+
+  const toggleValueModal = () => {
+    dispatch(toggleModalOpen('value'));
   };
 
   const handleCurrencyChange = (
     currency: { value: string; label: JSX.Element } | null,
   ): void => {
     if (currency?.value === 'add_currency') {
-      toggleModal();
+      toggleCurrencyModal();
     } else {
+      dispatch(setCurrencyId(currency?.value));
       setSelectedCurrency(currency?.value || '');
     }
   };
@@ -77,7 +88,10 @@ export const Header: React.FC<Props> = ({ currencies, setSelectedCurrency }) => 
           USDT Amount: <span className="text-yellow-300">{usdtAmount}</span>
         </div>
 
-        <button className="bg-white text-red-500 px-4 py-2 rounded-md hover:bg-red-500 hover:text-white focus:outline-none">
+        <button
+          onClick={toggleValueModal}
+          className="bg-white text-red-500 px-4 py-2 rounded-md hover:bg-red-500 hover:text-white focus:outline-none"
+        >
           Add Values
         </button>
       </div>

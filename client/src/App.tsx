@@ -1,7 +1,6 @@
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 
 import { CustomButton } from './components/CustomButton';
-import { Header } from './components/Header/Header';
 import { Layout } from './components/Layout';
 import { ModalForm } from './components/ModalForm/ModalForm';
 import { Table } from './components/Table/Table';
@@ -13,7 +12,7 @@ function App() {
   const dispatch = useAppDispatch();
 
   const toggleModal = () => {
-    dispatch(toggleModalOpen());
+    dispatch(toggleModalOpen('currency'));
   };
 
   const { data: currencies = [], isLoading } = useGetCurrenciesQuery();
@@ -21,15 +20,13 @@ function App() {
   const [selectedCurrency, setSelectedCurrency] = useState<string>(currencies[0]?._id);
 
   const currency = currencies.find((c) => c._id === selectedCurrency);
-  console.log(
-    '🚀 ~ file: App.tsx:22 ~ App ~ selectedCurrency:',
-    selectedCurrency,
-    'currency',
-    currency,
-  );
 
   return (
-    <Layout currencies={currencies} setSelectedCurrency={setSelectedCurrency}>
+    <Layout
+      currencies={currencies}
+      setSelectedCurrency={setSelectedCurrency}
+      selectedCurrency={currency}
+    >
       <ModalForm />
       {!currencies.length && <CustomButton onClick={toggleModal} />}
       {currency && <Table currency={currency} />}

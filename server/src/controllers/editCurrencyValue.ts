@@ -3,7 +3,7 @@ import { Currency } from '../models/Currency';
 
 export const editCurrencyValue = async (req: Request, res: Response) => {
   try {
-    const { amount } = req.body;
+    const { amount, time } = req.body;
     const { id, valueId } = req.params;
 
     if (!amount) {
@@ -16,16 +16,16 @@ export const editCurrencyValue = async (req: Request, res: Response) => {
       return res.status(404).json({ message: 'Currency not found' });
     }
 
-    const currentDate = new Date();
-    const formattedDate = `${currentDate.getDate()}/${
-      currentDate.getMonth() + 1
-    }/${currentDate.getFullYear()}: ${currentDate.getSeconds()}/${currentDate.getMinutes()}/${currentDate.getHours()}`;
+    // const currentDate = new Date();
+    // const formattedDate = `${currentDate.getDate()}/${
+    //   currentDate.getMonth() + 1
+    // }/${currentDate.getFullYear()}: ${currentDate.getSeconds()}/${currentDate.getMinutes()}/${currentDate.getHours()}`;
 
     currency.values = currency.values.map((value: { amount: string; time: string; _id: string }) => {
       if (value._id.toString() === valueId) {
         return {
           amount,
-          time: formattedDate,
+          time,
         };
       }
       return value;

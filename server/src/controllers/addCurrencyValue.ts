@@ -3,7 +3,7 @@ import { Currency } from '../models/Currency';
 
 export const addCurrencyValue = async (req: Request, res: Response) => {
   try {
-    const { amount } = req.body;
+    const { amount, time } = req.body;
     const { id } = req.params;
 
     if (!amount) {
@@ -19,14 +19,14 @@ export const addCurrencyValue = async (req: Request, res: Response) => {
     //   time: new Date(),
     // });
 
-    const currentDate = new Date();
-    const formattedDate = `${currentDate.getDate()}/${
-      currentDate.getMonth() + 1
-    }/${currentDate.getFullYear()}: ${currentDate.getSeconds()}/${currentDate.getMinutes()}/${currentDate.getHours()}`;
+    // const currentDate = new Date();
+    // const formattedDate = `${currentDate.getDate()}/${
+    //   currentDate.getMonth() + 1
+    // }/${currentDate.getFullYear()}: ${currentDate.getSeconds()}/${currentDate.getMinutes()}/${currentDate.getHours()}`;
 
     currency.values.push({
       amount,
-      time: formattedDate,
+      time,
     });
     await currency.save();
 
