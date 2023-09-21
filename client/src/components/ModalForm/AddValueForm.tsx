@@ -28,7 +28,6 @@ export const AddValueForm: FC<Props> = ({ handleClose }) => {
   const [addValue] = useAddCurrencyValueMutation();
 
   const currencyId = useAppSelector(currencyIdSelector);
-  console.log('🚀 ~ file: AddValueForm.tsx:31 ~ currencyId:', currencyId);
 
   const handleFormSubmit = async ({ amount, time }: { amount: number; time: Date }) => {
     if (currencyId) {

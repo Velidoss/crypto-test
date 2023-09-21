@@ -1,5 +1,3 @@
-import { useState } from 'react';
-
 import { Chart } from './components/Chart/Chart';
 import { CustomButton } from './components/CustomButton';
 import { Layout } from './components/Layout';
@@ -16,7 +14,7 @@ function App() {
     dispatch(toggleModalOpen('currency'));
   };
 
-  const { data: currencies = [], isLoading } = useGetCurrenciesQuery();
+  const { data: currencies = [] } = useGetCurrenciesQuery();
 
   const selectedCurrencyId = useAppSelector(currencyIdSelector);
 
