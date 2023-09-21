@@ -24,7 +24,7 @@ export const currencyApi = createApi({
       async onQueryStarted(args, { queryFulfilled, dispatch }) {
         const result = await queryFulfilled;
 
-        dispatch(setInitalCurrencyId(result.data[1]._id));
+        dispatch(setInitalCurrencyId(result.data[0]._id));
       },
     }),
     getCurrencyUSDTValue: builder.query<{ USDT: number }, string>({

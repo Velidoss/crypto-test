@@ -7,7 +7,7 @@ import {
   Title,
   Tooltip,
 } from 'chart.js';
-import React, { FC } from 'react';
+import { FC } from 'react';
 import { Bar } from 'react-chartjs-2';
 
 import { formatDate, parseStringToDate } from '../../helpers/formatDate';
@@ -63,8 +63,14 @@ export const Chart: FC<Props> = ({ values }) => {
     .sort((a, b) => a.time.getTime() - b.time.getTime());
 
   return (
-    <div className="h-96 flex justify-center">
-      <Bar options={options} data={getData(barValues)} />
+    <div className="h-96 flex justify-center ">
+      {barValues.length ? (
+        <Bar options={options} data={getData(barValues)} />
+      ) : (
+        <div className="flex justify-center items-center text-lg font-bold">
+          Add values to see stats!
+        </div>
+      )}
     </div>
   );
 };

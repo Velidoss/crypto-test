@@ -1,29 +1,18 @@
-import {
-  ColumnDef,
-  createColumnHelper,
-  flexRender,
-  getCoreRowModel,
-  RowData,
-  useReactTable,
-} from '@tanstack/react-table';
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 import ReactDatePicker from 'react-datepicker';
 
 import { formatDate, parseStringToDate } from '../../helpers/formatDate';
 import {
   Currency,
-  CurrencyValue,
   useDeleteCurrencyValueMutation,
   useEditCurrencyValueMutation,
 } from '../../store/api/currencyApi';
-import { CustomButton } from '../CustomButton';
 
 type Props = {
   currency: Currency;
 };
 
 export const Table: React.FC<Props> = ({ currency }) => {
-  console.log('🚀 ~ file: Table.tsx:26 ~ currency:', currency);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editedAmount, setEditedAmount] = useState<number>(0);
   const [editedTime, setEditedTime] = useState<Date | null>(null);

@@ -1,6 +1,5 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice } from '@reduxjs/toolkit';
 
-import { Currency } from '../api/currencyApi';
 import { RootState } from '../store';
 
 type initialState = {
