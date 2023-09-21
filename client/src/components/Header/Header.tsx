@@ -1,17 +1,10 @@
-import React, { useState } from 'react';
+import React from 'react';
 import Select from 'react-select';
 
 import PlusIcon from '../../../resources/plus-svgrepo-com.svg';
 import { Currency, useGetCurrencyUSDTValueQuery } from '../../store/api/currencyApi';
 import { useAppDispatch } from '../../store/hooks';
-import { closeModal, setCurrencyId, toggleModalOpen } from '../../store/modal/slice';
-
-// Sample currency data (replace with your actual data)
-const currencyList = [
-  { name: 'Bitcoin', icon: 'BTC' },
-  { name: 'Ethereum', icon: 'ETH' },
-  { name: 'Ripple', icon: 'XRP' },
-];
+import { setCurrencyId, toggleModalOpen } from '../../store/modal/slice';
 
 type Props = {
   currencies: Currency[];
@@ -27,7 +20,6 @@ export const Header: React.FC<Props> = ({ currencies, selectedCurrency }) => {
       skip: !selectedCurrency?.name,
     },
   );
-  console.log('🚀 ~ file: App.tsx:24 ~ App ~ USDTamount:', USDTamount);
 
   const toggleCurrencyModal = () => {
     dispatch(toggleModalOpen('currency'));

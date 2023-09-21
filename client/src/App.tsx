@@ -5,10 +5,7 @@ import { CustomButton } from './components/CustomButton';
 import { Layout } from './components/Layout';
 import { ModalForm } from './components/ModalForm/ModalForm';
 import { Table } from './components/Table/Table';
-import {
-  useGetCurrenciesQuery,
-  useGetCurrencyUSDTValueQuery,
-} from './store/api/currencyApi';
+import { useGetCurrenciesQuery } from './store/api/currencyApi';
 import { useAppDispatch, useAppSelector } from './store/hooks';
 import { currencyIdSelector, toggleModalOpen } from './store/modal/slice';
 
@@ -22,10 +19,6 @@ function App() {
   const { data: currencies = [], isLoading } = useGetCurrenciesQuery();
 
   const selectedCurrencyId = useAppSelector(currencyIdSelector);
-  console.log(
-    '🚀 ~ file: App.tsx:25 ~ App ~ selectedCurrencyId--------->:',
-    selectedCurrencyId,
-  );
 
   const currency = currencies.find((c) => c._id === selectedCurrencyId);
 
@@ -36,7 +29,7 @@ function App() {
         <CustomButton onClick={toggleModal}>Add currency</CustomButton>
       )}
       <div className="w-full pl-3 pr-3">
-        {currency && <Chart />}
+        {currency && <Chart values={currency.values} />}
         {currency && <Table currency={currency} />}
       </div>
     </Layout>

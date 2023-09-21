@@ -7,8 +7,11 @@ import {
   Title,
   Tooltip,
 } from 'chart.js';
-import React from 'react';
+import React, { FC } from 'react';
 import { Bar } from 'react-chartjs-2';
+
+import { formatDate, parseStringToDate } from '../../helpers/formatDate';
+import { CurrencyValue } from '../../store/api/currencyApi';
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
@@ -20,29 +23,48 @@ export const options = {
     },
     title: {
       display: true,
-      text: 'Chart.js Bar Chart',
+      text: 'Currency values',
     },
   },
 };
 
-const labels = ['January', 'February', 'March', 'April', 'May', 'June', 'July'];
-
-export const data = {
-  labels,
-  datasets: [
-    {
-      label: 'Dataset 1',
-      data: labels.map(() => Math.random() * 1000),
-      backgroundColor: 'rgba(255, 99, 132, 0.5)',
-    },
-    {
-      label: 'Dataset 2',
-      data: labels.map(() => Math.random() * 1000),
-      backgroundColor: 'rgba(53, 162, 235, 0.5)',
-    },
-  ],
+const getBackgroundColor = (values: { _id: string; amount: string; time: Date }[]) => {
+  const backgroundColors = ['rgba(255, 99, 132, 0.5)'];
+  for (let i = 1; i < values.length; i++) {
+    const currentAmount = parseFloat(values[i].amount);
+    const prevAmount = parseFloat(values[i - 1].amount);
+    if (currentAmount < prevAmount) {
+      backgroundColors.push('rgba(75, 192, 192, 0.5)');
+    } else {
+      backgroundColors.push('rgba(255, 99, 132, 0.5)');
+    }
+  }
+  return backgroundColors;
 };
 
-export const Chart = () => {
-  return <Bar options={options} data={data} />;
+export const getData = (values: { _id: string; amount: string; time: Date }[]) => ({
+  labels: values.map((value) => formatDate(value.time)),
+  datasets: [
+    {
+      label: 'values',
+      data: values.map((value) => value.amount),
+      backgroundColor: getBackgroundColor(values),
+    },
+  ],
+});
+
+type Props = {
+  values: CurrencyValue[];
+};
+
+export const Chart: FC<Props> = ({ values }) => {
+  const barValues = values
+    .map((value) => ({ ...value, time: parseStringToDate(value.time) }))
+    .sort((a, b) => a.time.getTime() - b.time.getTime());
+
+  return (
+    <div className="h-96 flex justify-center">
+      <Bar options={options} data={getData(barValues)} />
+    </div>
+  );
 };
