@@ -1,6 +1,6 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
-import { setCurrencyId } from '../modal/slice';
+import { setInitalCurrencyId } from '../modal/slice';
 
 export type CurrencyValue = { _id: string; amount: string; time: string };
 
@@ -24,8 +24,13 @@ export const currencyApi = createApi({
       async onQueryStarted(args, { queryFulfilled, dispatch }) {
         const result = await queryFulfilled;
 
-        dispatch(setCurrencyId(result.data[1]._id));
+        dispatch(setInitalCurrencyId(result.data[1]._id));
       },
+    }),
+    getCurrencyUSDTValue: builder.query<{ USDT: number }, string>({
+      query: (currencyName) => ({
+        url: `https://min-api.cryptocompare.com/data/price?fsym=${currencyName}&tsyms=USDT`,
+      }),
     }),
     addCurrency: builder.mutation<Currency, FormData>({
       query: (formData) => ({ url: `/add-currency`, method: 'post', body: formData }),
@@ -71,6 +76,7 @@ export const currencyApi = createApi({
 
 export const {
   useGetCurrenciesQuery,
+  useGetCurrencyUSDTValueQuery,
   useAddCurrencyMutation,
   useAddCurrencyValueMutation,
   useEditCurrencyValueMutation,

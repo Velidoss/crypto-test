@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import Select from 'react-select';
 
 import PlusIcon from '../../../resources/plus-svgrepo-com.svg';
-import { Currency } from '../../store/api/currencyApi';
+import { Currency, useGetCurrencyUSDTValueQuery } from '../../store/api/currencyApi';
 import { useAppDispatch } from '../../store/hooks';
 import { closeModal, setCurrencyId, toggleModalOpen } from '../../store/modal/slice';
 
@@ -16,17 +16,18 @@ const currencyList = [
 type Props = {
   currencies: Currency[];
   selectedCurrency?: Currency;
-  setSelectedCurrency: (value: string) => void;
 };
 
-export const Header: React.FC<Props> = ({
-  currencies,
-  selectedCurrency,
-  setSelectedCurrency,
-}) => {
-  const [usdtAmount, setUsdtAmount] = useState<number>(10000);
-  const [modalOpen, setModalOpen] = useState<number>(10000);
+export const Header: React.FC<Props> = ({ currencies, selectedCurrency }) => {
   const dispatch = useAppDispatch();
+
+  const { data: USDTamount } = useGetCurrencyUSDTValueQuery(
+    selectedCurrency?.name || '',
+    {
+      skip: !selectedCurrency?.name,
+    },
+  );
+  console.log('🚀 ~ file: App.tsx:24 ~ App ~ USDTamount:', USDTamount);
 
   const toggleCurrencyModal = () => {
     dispatch(toggleModalOpen('currency'));
@@ -43,7 +44,7 @@ export const Header: React.FC<Props> = ({
       toggleCurrencyModal();
     } else {
       dispatch(setCurrencyId(currency?.value));
-      setSelectedCurrency(currency?.value || '');
+      dispatch(setCurrencyId(currency?.value || ''));
     }
   };
 
@@ -85,7 +86,8 @@ export const Header: React.FC<Props> = ({
         </div>
 
         <div className="text-white font-semibold">
-          USDT Amount: <span className="text-yellow-300">{usdtAmount}</span>
+          USDT Amount:{' '}
+          <span className="text-yellow-300">{USDTamount?.USDT || 'not found'}</span>
         </div>
 
         <button

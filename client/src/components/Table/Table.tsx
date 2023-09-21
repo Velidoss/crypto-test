@@ -23,6 +23,7 @@ type Props = {
 };
 
 export const Table: React.FC<Props> = ({ currency }) => {
+  console.log('🚀 ~ file: Table.tsx:26 ~ currency:', currency);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editedAmount, setEditedAmount] = useState<number>(0);
   const [editedTime, setEditedTime] = useState<Date | null>(null);

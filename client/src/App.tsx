@@ -1,12 +1,16 @@
 import { useState } from 'react';
 
+import { Chart } from './components/Chart/Chart';
 import { CustomButton } from './components/CustomButton';
 import { Layout } from './components/Layout';
 import { ModalForm } from './components/ModalForm/ModalForm';
 import { Table } from './components/Table/Table';
-import { useGetCurrenciesQuery } from './store/api/currencyApi';
-import { useAppDispatch } from './store/hooks';
-import { toggleModalOpen } from './store/modal/slice';
+import {
+  useGetCurrenciesQuery,
+  useGetCurrencyUSDTValueQuery,
+} from './store/api/currencyApi';
+import { useAppDispatch, useAppSelector } from './store/hooks';
+import { currencyIdSelector, toggleModalOpen } from './store/modal/slice';
 
 function App() {
   const dispatch = useAppDispatch();
@@ -17,21 +21,24 @@ function App() {
 
   const { data: currencies = [], isLoading } = useGetCurrenciesQuery();
 
-  const [selectedCurrency, setSelectedCurrency] = useState<string>(currencies[0]?._id);
+  const selectedCurrencyId = useAppSelector(currencyIdSelector);
+  console.log(
+    '🚀 ~ file: App.tsx:25 ~ App ~ selectedCurrencyId--------->:',
+    selectedCurrencyId,
+  );
 
-  const currency = currencies.find((c) => c._id === selectedCurrency);
+  const currency = currencies.find((c) => c._id === selectedCurrencyId);
 
   return (
-    <Layout
-      currencies={currencies}
-      setSelectedCurrency={setSelectedCurrency}
-      selectedCurrency={currency}
-    >
+    <Layout currencies={currencies} selectedCurrency={currency}>
       <ModalForm />
       {!currencies.length && (
         <CustomButton onClick={toggleModal}>Add currency</CustomButton>
       )}
-      {currency && <Table currency={currency} />}
+      <div className="w-full pl-3 pr-3">
+        {currency && <Chart />}
+        {currency && <Table currency={currency} />}
+      </div>
     </Layout>
   );
 }
