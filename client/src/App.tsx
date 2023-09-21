@@ -28,7 +28,9 @@ function App() {
       selectedCurrency={currency}
     >
       <ModalForm />
-      {!currencies.length && <CustomButton onClick={toggleModal} />}
+      {!currencies.length && (
+        <CustomButton onClick={toggleModal}>Add currency</CustomButton>
+      )}
       {currency && <Table currency={currency} />}
     </Layout>
   );

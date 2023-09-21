@@ -2,7 +2,7 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
 import { setCurrencyId } from '../modal/slice';
 
-export type CurrencyValue = { amount: string; time: string }[];
+export type CurrencyValue = { _id: string; amount: string; time: string };
 
 export type Currency = {
   _id: string;
@@ -47,13 +47,14 @@ export const currencyApi = createApi({
     }),
     editCurrencyValue: builder.mutation<
       Currency,
-      { id: string; valueId: string; amount: number }
+      { id: string; valueId: string; amount: number; time: string }
     >({
-      query: ({ id, valueId, amount }) => ({
+      query: ({ id, valueId, amount, time }) => ({
         url: `/edit-currency-value/${id}/${valueId}`,
-        method: 'patch',
+        method: 'put',
         body: {
           amount: amount.toString(),
+          time,
         },
       }),
       invalidatesTags: ['Currencies'],

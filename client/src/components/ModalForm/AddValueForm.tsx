@@ -5,6 +5,7 @@ import { FC, ReactNode } from 'react';
 import DatePicker from 'react-datepicker';
 import * as Yup from 'yup';
 
+import { formatDate } from '../../helpers/formatDate';
 import { useAddCurrencyValueMutation } from '../../store/api/currencyApi';
 import { useAppSelector } from '../../store/hooks';
 import { currencyIdSelector } from '../../store/modal/slice';
@@ -27,20 +28,8 @@ export const AddValueForm: FC<Props> = ({ handleClose }) => {
   const [addValue] = useAddCurrencyValueMutation();
 
   const currencyId = useAppSelector(currencyIdSelector);
-  console.log('🚀 ~ file: AddValueForm.tsx:30 ~ currencyId:', currencyId);
-
-  const formatDate = (date: Date): string => {
-    return new Intl.DateTimeFormat('en-GB', {
-      year: 'numeric',
-      month: '2-digit',
-      day: '2-digit',
-      hour: '2-digit',
-      minute: '2-digit',
-    }).format(date);
-  };
 
   const handleFormSubmit = async ({ amount, time }: { amount: number; time: Date }) => {
-    console.log('🚀 ~ file: AddValueForm.tsx:43 ~ handleFormSubmit ~ time:', time);
     if (currencyId) {
       addValue({
         id: currencyId,

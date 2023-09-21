@@ -26,7 +26,7 @@ app.get('/api/get-currencies', getCurrencies);
 
 app.post('/api/add-currency', upload.single('image'), addCurrency);
 app.put('/api/add-currency-value/:id', addCurrencyValue);
-app.patch('/api/edit-currency-value/:id/:valueId', editCurrencyValue);
+app.put('/api/edit-currency-value/:id/:valueId', editCurrencyValue);
 app.delete('/api/delete-currency-value/:id/:valueId', deleteCurrencyValue);
 
 app.listen(port, async () => {
